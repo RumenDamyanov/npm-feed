@@ -48,17 +48,58 @@ module.exports = [
   },
   {
     files: ['**/*.test.ts', '**/*.spec.ts', 'tests/**/*.ts'],
+    languageOptions: {
+      globals: {
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly'
+      }
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      'no-console': 'off'
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      'no-console': 'off',
+      'no-undef': 'off'
+    }
+  },
+  {
+    files: ['tests/setup.ts'],
+    languageOptions: {
+      globals: {
+        jest: 'readonly',
+        expect: 'readonly'
+      }
+    },
+    rules: {
+      '@typescript-eslint/no-namespace': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      'no-undef': 'off'
     }
   },
   {
     files: ['**/*.js', '**/*.cjs'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'commonjs'
+      sourceType: 'commonjs',
+      globals: {
+        require: 'readonly',
+        module: 'readonly',
+        exports: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        console: 'readonly'
+      }
     },
     rules: {
       '@typescript-eslint/no-require-imports': 'off'

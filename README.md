@@ -17,7 +17,7 @@ This package is part of a comprehensive feed generation suite created by the sam
 
 - 🐘 **PHP**: [RumenDamyanov/php-feed](https://github.com/RumenDamyanov/php-feed) - Composer package
 - 🐹 **Go**: [RumenDamyanov/go-feed](https://github.com/RumenDamyanov/go-feed) - Go module
-- 🟨 **Node.js**: This package - NPM package for JavaScript/TypeScript  
+- 🟨 **Node.js**: This package - NPM package for JavaScript/TypeScript
 
 All implementations share the same core philosophy and feature set with language-specific optimizations.
 
@@ -114,10 +114,7 @@ app.get('/feed.xml', (req, res) => {
     validate: true,
   });
 
-  feed
-    .setTitle('My Blog')
-    .setDescription('Latest blog posts')
-    .setLink('https://example.com');
+  feed.setTitle('My Blog').setDescription('Latest blog posts').setLink('https://example.com');
 
   // Add your content
   feed.addItem({
@@ -148,10 +145,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     baseUrl: 'https://yoursite.com',
   });
 
-  feed
-    .setTitle('My Next.js Blog')
-    .setDescription('Latest posts')
-    .setLink('https://yoursite.com');
+  feed.setTitle('My Next.js Blog').setDescription('Latest posts').setLink('https://yoursite.com');
 
   // Add your posts
   feed.addItem({

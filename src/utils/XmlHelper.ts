@@ -9,7 +9,7 @@ export function escapeXml(text: string): string {
   if (typeof text !== 'string') {
     return String(text);
   }
-  
+
   return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -25,7 +25,7 @@ export function createCdata(content: string): string {
   if (typeof content !== 'string') {
     return `<![CDATA[${String(content)}]]>`;
   }
-  
+
   // Escape any CDATA end markers within the content
   const escapedContent = content.replace(/]]>/g, ']]]]><![CDATA[>');
   return `<![CDATA[${escapedContent}]]>`;
@@ -38,23 +38,23 @@ export function formatXml(xml: string, indent: string = '  '): string {
   const tokens = xml.split(/(<[^>]*>)/);
   let result = '';
   let level = 0;
-  
+
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]?.trim();
-    
+
     if (!token) continue;
-    
+
     if (token.startsWith('<?xml')) {
       // XML declaration
       result += `${token}\n`;
     } else if (token.startsWith('</')) {
       // Closing tag
       level--;
-      
+
       // Check if previous token was text content (inline content)
       const prevToken = i > 0 ? tokens[i - 1]?.trim() : '';
       const isInlineContent = prevToken && !prevToken.startsWith('<');
-      
+
       if (!isInlineContent) {
         result += indent.repeat(level);
       }
@@ -66,7 +66,7 @@ export function formatXml(xml: string, indent: string = '  '): string {
       // Opening tag
       result += indent.repeat(level);
       result += token;
-      
+
       // Check if this will be simple inline content
       const nextToken = i + 1 < tokens.length ? tokens[i + 1]?.trim() : '';
       const tokenAfter = i + 2 < tokens.length ? tokens[i + 2]?.trim() : '';
@@ -85,7 +85,7 @@ export function formatXml(xml: string, indent: string = '  '): string {
       // Text content
       const nextToken = i + 1 < tokens.length ? tokens[i + 1]?.trim() : '';
       const isInlineContent = nextToken?.startsWith('</');
-      
+
       if (isInlineContent) {
         // Keep inline
         result += token;
@@ -95,7 +95,7 @@ export function formatXml(xml: string, indent: string = '  '): string {
       }
     }
   }
-  
+
   return result.trim();
 }
 
@@ -121,17 +121,17 @@ export function createElement(
   if (!isValidXmlTagName(tagName)) {
     throw new Error(`Invalid XML tag name: ${tagName}`);
   }
-  
+
   const attrs = Object.entries(attributes)
     .map(([key, value]) => `${key}="${escapeXml(value)}"`)
     .join(' ');
-  
+
   const attrString = attrs ? ` ${attrs}` : '';
   const processedContent = escapeContent ? escapeXml(content) : content;
-  
+
   if (!content) {
     return `<${tagName}${attrString}/>`;
   }
-  
+
   return `<${tagName}${attrString}>${processedContent}</${tagName}>`;
 }

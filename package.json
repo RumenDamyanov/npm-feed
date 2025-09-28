@@ -28,7 +28,6 @@
     "email": "contact@rumenx.com",
     "url": "https://github.com/RumenDamyanov"
   },
-
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",

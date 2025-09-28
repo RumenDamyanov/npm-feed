@@ -12,7 +12,7 @@ export function isValidUrl(url: string): boolean {
   if (typeof url !== 'string' || !url.trim()) {
     return false;
   }
-  
+
   // Simple URL validation pattern
   const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
   return urlPattern.test(url.trim());
@@ -25,18 +25,18 @@ export function isAllowedDomain(url: string, allowedDomains?: string[]): boolean
   if (!allowedDomains || allowedDomains.length === 0) {
     return true;
   }
-  
+
   // Extract hostname from URL using regex
   const hostnameMatch = url.match(/^https?:\/\/([^/]+)/i);
   if (!hostnameMatch) {
     return false;
   }
-  
+
   const hostname = hostnameMatch[1]?.toLowerCase();
   if (!hostname) {
     return false;
   }
-  
+
   return allowedDomains.some(domain => {
     const normalizedDomain = domain.toLowerCase();
     return hostname === normalizedDomain || hostname.endsWith(`.${normalizedDomain}`);
@@ -50,7 +50,7 @@ export function isValidEmail(email: string): boolean {
   if (typeof email !== 'string' || !email.trim()) {
     return false;
   }
-  
+
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailPattern.test(email);
 }
@@ -62,7 +62,7 @@ export function isValidLanguageCode(lang: string): boolean {
   if (typeof lang !== 'string' || !lang.trim()) {
     return false;
   }
-  
+
   // Basic pattern: 2-letter language code, optionally followed by country code
   const langPattern = /^[a-z]{2}(-[A-Z]{2})?$/;
   return langPattern.test(lang);
@@ -78,7 +78,7 @@ export function isValidPriority(priority: number): boolean {
 /**
  * Validate required string field
  */
-export function validateRequiredString(value: any, fieldName: string): ValidationError | null {
+export function validateRequiredString(value: unknown, fieldName: string): ValidationError | null {
   if (typeof value !== 'string' || !value.trim()) {
     return {
       field: fieldName,
@@ -93,11 +93,17 @@ export function validateRequiredString(value: any, fieldName: string): Validatio
 /**
  * Validate URL field
  */
-export function validateUrl(url: any, fieldName: string, allowedDomains?: string[]): ValidationError | null {
+export function validateUrl(
+  url: unknown,
+  fieldName: string,
+  allowedDomains?: string[]
+): ValidationError | null {
   const stringError = validateRequiredString(url, fieldName);
   if (stringError) return stringError;
-  
-  if (!isValidUrl(url)) {
+
+  // At this point we know url is a non-empty string
+  const urlString = url as string;
+  if (!isValidUrl(urlString)) {
     return {
       field: fieldName,
       type: 'invalid_url',
@@ -105,8 +111,8 @@ export function validateUrl(url: any, fieldName: string, allowedDomains?: string
       value: url,
     };
   }
-  
-  if (!isAllowedDomain(url, allowedDomains)) {
+
+  if (!isAllowedDomain(urlString, allowedDomains)) {
     return {
       field: fieldName,
       type: 'domain_not_allowed',
@@ -114,7 +120,7 @@ export function validateUrl(url: any, fieldName: string, allowedDomains?: string
       value: url,
     };
   }
-  
+
   return null;
 }
 
@@ -123,23 +129,23 @@ export function validateUrl(url: any, fieldName: string, allowedDomains?: string
  */
 export function validateFeedItem(item: FeedItemData, allowedDomains?: string[]): ValidationError[] {
   const errors: ValidationError[] = [];
-  
+
   // Validate required fields
   const titleError = validateRequiredString(item.title, 'title');
   if (titleError) errors.push(titleError);
-  
+
   const descriptionError = validateRequiredString(item.description, 'description');
   if (descriptionError) errors.push(descriptionError);
-  
+
   const linkError = validateUrl(item.link, 'link', allowedDomains);
   if (linkError) errors.push(linkError);
-  
+
   // Validate optional fields
   if (item.author !== undefined) {
     const authorError = validateRequiredString(item.author, 'author');
     if (authorError) errors.push(authorError);
   }
-  
+
   if (item.priority !== undefined && !isValidPriority(item.priority)) {
     errors.push({
       field: 'priority',
@@ -148,7 +154,7 @@ export function validateFeedItem(item: FeedItemData, allowedDomains?: string[]):
       value: item.priority,
     });
   }
-  
+
   // Validate images
   if (item.images) {
     item.images.forEach((image, index) => {
@@ -156,30 +162,41 @@ export function validateFeedItem(item: FeedItemData, allowedDomains?: string[]):
       if (imageUrlError) errors.push(imageUrlError);
     });
   }
-  
+
   // Validate videos
   if (item.videos) {
     item.videos.forEach((video, index) => {
-      const thumbnailError = validateUrl(video.thumbnail_url, `videos[${index}].thumbnail_url`, allowedDomains);
+      const thumbnailError = validateUrl(
+        video.thumbnail_url,
+        `videos[${index}].thumbnail_url`,
+        allowedDomains
+      );
       if (thumbnailError) errors.push(thumbnailError);
-      
-      const contentError = validateUrl(video.content_url, `videos[${index}].content_url`, allowedDomains);
+
+      const contentError = validateUrl(
+        video.content_url,
+        `videos[${index}].content_url`,
+        allowedDomains
+      );
       if (contentError) errors.push(contentError);
-      
+
       const titleError = validateRequiredString(video.title, `videos[${index}].title`);
       if (titleError) errors.push(titleError);
-      
+
       const descError = validateRequiredString(video.description, `videos[${index}].description`);
       if (descError) errors.push(descError);
     });
   }
-  
+
   // Validate translations
   if (item.translations) {
     item.translations.forEach((translation, index) => {
-      const langError = validateRequiredString(translation.language, `translations[${index}].language`);
+      const langError = validateRequiredString(
+        translation.language,
+        `translations[${index}].language`
+      );
       if (langError) errors.push(langError);
-      
+
       if (!isValidLanguageCode(translation.language)) {
         errors.push({
           field: `translations[${index}].language`,
@@ -188,11 +205,11 @@ export function validateFeedItem(item: FeedItemData, allowedDomains?: string[]):
           value: translation.language,
         });
       }
-      
+
       const urlError = validateUrl(translation.url, `translations[${index}].url`, allowedDomains);
       if (urlError) errors.push(urlError);
     });
   }
-  
+
   return errors;
 }

@@ -13,15 +13,15 @@ expect.extend({
       const tagPattern = /<([^>]+)>/g;
       const tags: string[] = [];
       let match;
-      
+
       while ((match = tagPattern.exec(received)) !== null) {
         const tag = match[1];
-        
+
         // Skip XML declarations, processing instructions, and comments
         if (tag.startsWith('?') || tag.startsWith('!')) {
           continue;
         }
-        
+
         if (tag.startsWith('/')) {
           // Closing tag
           const tagName = tag.substring(1);
@@ -38,38 +38,38 @@ expect.extend({
           tags.push(tagName);
         }
       }
-      
+
       if (tags.length > 0) {
         return {
           message: () => `Expected valid XML, but found unclosed tags: ${tags.join(', ')}`,
           pass: false,
         };
       }
-      
+
       return {
         message: () => 'Expected invalid XML',
         pass: true,
       };
     } catch (error) {
       return {
-        message: () => `Expected valid XML, but parsing failed: ${error}`,
+        message: () => `Expected valid XML, but parsing failed: ${String(error)}`,
         pass: false,
       };
     }
   },
-  
+
   toContainXMLElement(received: string, elementName: string) {
     const pattern = new RegExp(`<${elementName}[^>]*>.*?</${elementName}>`, 's');
     const pass = pattern.test(received);
-    
+
     return {
-      message: () => 
-        pass 
+      message: () =>
+        pass
           ? `Expected XML not to contain element ${elementName}`
           : `Expected XML to contain element ${elementName}`,
       pass,
     };
-  }
+  },
 });
 
 // Declare custom matcher types for TypeScript

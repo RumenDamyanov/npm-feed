@@ -10,22 +10,22 @@ export interface FeedCacheInterface {
    * Get cached value by key
    */
   get(key: string): Promise<string | null>;
-  
+
   /**
    * Set cached value with optional TTL
    */
   set(key: string, value: string, ttl?: number): Promise<void>;
-  
+
   /**
    * Check if key exists in cache
    */
   has(key: string): Promise<boolean>;
-  
+
   /**
    * Delete cached value by key
    */
   delete(key: string): Promise<void>;
-  
+
   /**
    * Clear all cached values
    */
@@ -39,17 +39,17 @@ export interface FeedConfigInterface {
   /**
    * Get configuration value by key
    */
-  get(key: string, defaultValue?: any): any;
-  
+  get(key: string, defaultValue?: unknown): unknown;
+
   /**
    * Check if configuration key exists
    */
   has(key: string): boolean;
-  
+
   /**
    * Get all configuration values
    */
-  all(): Record<string, any>;
+  all(): Record<string, unknown>;
 }
 
 /**
@@ -59,13 +59,13 @@ export interface FeedResponseInterface {
   /**
    * Send response with content and content type
    */
-  send(content: string, contentType: string): any;
-  
+  send(content: string, contentType: string): void;
+
   /**
    * Set response header
    */
   setHeader(name: string, value: string): void;
-  
+
   /**
    * Set response status code
    */
@@ -79,8 +79,8 @@ export interface FeedViewInterface {
   /**
    * Render template with data
    */
-  render(template: string, data: any): Promise<string>;
-  
+  render(template: string, data: unknown): Promise<string>;
+
   /**
    * Check if template exists
    */

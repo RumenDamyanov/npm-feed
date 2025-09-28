@@ -43,22 +43,25 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 - What actually happens
 - Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
 
-People *love* thorough bug reports. I'm not even kidding.
+People _love_ thorough bug reports. I'm not even kidding.
 
 ## Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/RumenDamyanov/npm-feed.git
    cd npm-feed
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Run tests to make sure everything is working:
+
    ```bash
    npm test
    ```
@@ -71,6 +74,7 @@ People *love* thorough bug reports. I'm not even kidding.
 ## Development Workflow
 
 1. Create a new branch for your feature or fix:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -78,11 +82,13 @@ People *love* thorough bug reports. I'm not even kidding.
 2. Make your changes and add tests if applicable.
 
 3. Run the full test suite:
+
    ```bash
    npm run check
    ```
 
 4. Commit your changes:
+
    ```bash
    git commit -m "Add some feature"
    ```

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial project setup and architecture
 - TypeScript configuration with ESM/CJS dual build
 - Comprehensive testing framework with Jest
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - TBD
 
 ### Added
+
 - Core Feed class with RSS 2.0 and Atom 1.0 support
 - Framework-agnostic design with adapter pattern
 - Rich media support (images, videos, news)

@@ -39,7 +39,9 @@ describe('XmlHelper', () => {
     });
 
     it('should escape CDATA end markers', () => {
-      expect(createCdata('Text with ]]> marker')).toBe('<![CDATA[Text with ]]]]><![CDATA[> marker]]>');
+      expect(createCdata('Text with ]]> marker')).toBe(
+        '<![CDATA[Text with ]]]]><![CDATA[> marker]]>'
+      );
     });
 
     it('should handle non-string inputs', () => {
@@ -67,7 +69,9 @@ describe('XmlHelper', () => {
   describe('createElement', () => {
     it('should create simple XML elements', () => {
       expect(createElement('title', 'Hello World')).toBe('<title>Hello World</title>');
-      expect(createElement('description', 'Test content')).toBe('<description>Test content</description>');
+      expect(createElement('description', 'Test content')).toBe(
+        '<description>Test content</description>'
+      );
     });
 
     it('should create self-closing elements', () => {
@@ -76,26 +80,32 @@ describe('XmlHelper', () => {
     });
 
     it('should handle attributes', () => {
-      expect(createElement('link', '', { href: 'https://example.com' }))
-        .toBe('<link href="https://example.com"/>');
-      
-      expect(createElement('a', 'Click here', { href: 'https://example.com', target: '_blank' }))
-        .toBe('<a href="https://example.com" target="_blank">Click here</a>');
+      expect(createElement('link', '', { href: 'https://example.com' })).toBe(
+        '<link href="https://example.com"/>'
+      );
+
+      expect(
+        createElement('a', 'Click here', { href: 'https://example.com', target: '_blank' })
+      ).toBe('<a href="https://example.com" target="_blank">Click here</a>');
     });
 
     it('should escape content and attributes', () => {
       expect(createElement('title', 'Hello & World')).toBe('<title>Hello &amp; World</title>');
-      expect(createElement('link', '', { href: 'https://example.com?a=1&b=2' }))
-        .toBe('<link href="https://example.com?a=1&amp;b=2"/>');
+      expect(createElement('link', '', { href: 'https://example.com?a=1&b=2' })).toBe(
+        '<link href="https://example.com?a=1&amp;b=2"/>'
+      );
     });
 
     it('should handle unescaped content', () => {
-      expect(createElement('description', '<![CDATA[HTML content]]>', {}, false))
-        .toBe('<description><![CDATA[HTML content]]></description>');
+      expect(createElement('description', '<![CDATA[HTML content]]>', {}, false)).toBe(
+        '<description><![CDATA[HTML content]]></description>'
+      );
     });
 
     it('should throw error for invalid tag names', () => {
-      expect(() => createElement('123invalid', 'content')).toThrow('Invalid XML tag name: 123invalid');
+      expect(() => createElement('123invalid', 'content')).toThrow(
+        'Invalid XML tag name: 123invalid'
+      );
     });
   });
 
@@ -103,7 +113,7 @@ describe('XmlHelper', () => {
     it('should format simple XML with indentation', () => {
       const xml = '<root><item>content</item></root>';
       const formatted = formatXml(xml);
-      
+
       expect(formatted).toContain('<root>');
       expect(formatted).toContain('  <item>content</item>');
       expect(formatted).toContain('</root>');
@@ -112,14 +122,14 @@ describe('XmlHelper', () => {
     it('should preserve XML declaration', () => {
       const xml = '<?xml version="1.0"?><root><item>test</item></root>';
       const formatted = formatXml(xml);
-      
+
       expect(formatted).toMatch(/^<\?xml version="1\.0"\?>/);
     });
 
     it('should handle self-closing tags', () => {
       const xml = '<root><item/><other>content</other></root>';
       const formatted = formatXml(xml);
-      
+
       expect(formatted).toContain('  <item/>');
       expect(formatted).toContain('  <other>content</other>');
     });
@@ -127,7 +137,7 @@ describe('XmlHelper', () => {
     it('should use custom indentation', () => {
       const xml = '<root><item>content</item></root>';
       const formatted = formatXml(xml, '    '); // 4 spaces
-      
+
       expect(formatted).toContain('    <item>content</item>');
     });
   });

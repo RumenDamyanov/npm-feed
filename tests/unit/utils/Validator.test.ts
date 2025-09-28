@@ -45,7 +45,7 @@ describe('Validator', () => {
 
     it('should validate allowed domains', () => {
       const allowedDomains = ['example.com', 'test.org'];
-      
+
       expect(isAllowedDomain('https://example.com', allowedDomains)).toBe(true);
       expect(isAllowedDomain('https://test.org/path', allowedDomains)).toBe(true);
       expect(isAllowedDomain('https://sub.example.com', allowedDomains)).toBe(true);
@@ -53,7 +53,7 @@ describe('Validator', () => {
 
     it('should reject non-allowed domains', () => {
       const allowedDomains = ['example.com'];
-      
+
       expect(isAllowedDomain('https://other.com', allowedDomains)).toBe(false);
       expect(isAllowedDomain('https://fake-example.com', allowedDomains)).toBe(false);
     });
@@ -175,7 +175,7 @@ describe('Validator', () => {
     it('should fail for missing required fields', () => {
       const errors = validateFeedItem({} as any);
       expect(errors).toHaveLength(3); // title, description, link
-      
+
       const fields = errors.map(e => e.field);
       expect(fields).toContain('title');
       expect(fields).toContain('description');
@@ -187,7 +187,7 @@ describe('Validator', () => {
         ...validItem,
         priority: 2, // Invalid priority
       });
-      
+
       expect(errors).toHaveLength(1);
       expect(errors[0]?.field).toBe('priority');
       expect(errors[0]?.type).toBe('invalid_range');
@@ -198,7 +198,7 @@ describe('Validator', () => {
         ...validItem,
         images: [{ url: 'not-a-url' }],
       });
-      
+
       expect(errors).toHaveLength(1);
       expect(errors[0]?.field).toBe('images[0].url');
       expect(errors[0]?.type).toBe('invalid_url');
@@ -207,14 +207,16 @@ describe('Validator', () => {
     it('should validate videos', () => {
       const errors = validateFeedItem({
         ...validItem,
-        videos: [{
-          thumbnail_url: 'https://example.com/thumb.jpg',
-          content_url: 'not-a-url', // Invalid URL
-          title: 'Video Title',
-          description: 'Video description',
-        }],
+        videos: [
+          {
+            thumbnail_url: 'https://example.com/thumb.jpg',
+            content_url: 'not-a-url', // Invalid URL
+            title: 'Video Title',
+            description: 'Video description',
+          },
+        ],
       });
-      
+
       expect(errors).toHaveLength(1);
       expect(errors[0]?.field).toBe('videos[0].content_url');
     });
@@ -227,9 +229,9 @@ describe('Validator', () => {
           { language: 'fr', url: 'not-a-url' },
         ],
       });
-      
+
       expect(errors).toHaveLength(2);
-      
+
       const fields = errors.map(e => e.field);
       expect(fields).toContain('translations[0].language');
       expect(fields).toContain('translations[1].url');
@@ -237,7 +239,7 @@ describe('Validator', () => {
 
     it('should respect allowed domains', () => {
       const errors = validateFeedItem(validItem, ['other.com']);
-      
+
       expect(errors).toHaveLength(1);
       expect(errors[0]?.field).toBe('link');
       expect(errors[0]?.type).toBe('domain_not_allowed');

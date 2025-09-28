@@ -31,7 +31,7 @@ describe('DateHelper', () => {
       const before = Date.now();
       const result = new Date(formatDate(null as any)).getTime();
       const after = Date.now();
-      
+
       expect(result).toBeGreaterThanOrEqual(before);
       expect(result).toBeLessThanOrEqual(after);
     });
@@ -53,7 +53,7 @@ describe('DateHelper', () => {
     it('should format dates in RFC 822 format', () => {
       const date = new Date('2023-12-01T10:30:00.000Z');
       const rssDate = formatRssDate(date);
-      
+
       expect(rssDate).toMatch(/^[A-Za-z]{3}, \d{2} [A-Za-z]{3} \d{4} \d{2}:\d{2}:\d{2} GMT$/);
       expect(rssDate).toBe('Fri, 01 Dec 2023 10:30:00 GMT');
     });
@@ -86,7 +86,7 @@ describe('DateHelper', () => {
       const now = new Date();
       const recentDate = new Date(now.getFullYear() - 1, 0, 1);
       const futureDate = new Date(now.getFullYear(), 11, 31);
-      
+
       expect(isValidFeedDate(now)).toBe(true);
       expect(isValidFeedDate(recentDate)).toBe(true);
       expect(isValidFeedDate(futureDate)).toBe(true);
@@ -104,7 +104,7 @@ describe('DateHelper', () => {
 
     it('should handle custom date ranges', () => {
       const testDate = new Date(2020, 0, 1);
-      
+
       expect(isValidFeedDate(testDate, 10, 5)).toBe(true); // Within 10 years past, 5 years future
       expect(isValidFeedDate(testDate, 2, 5)).toBe(false); // Outside 2 years past
     });
@@ -120,9 +120,9 @@ describe('DateHelper', () => {
       const before = Date.now();
       const current = getCurrentDate();
       const after = Date.now();
-      
+
       const currentTime = new Date(current).getTime();
-      
+
       expect(currentTime).toBeGreaterThanOrEqual(before);
       expect(currentTime).toBeLessThanOrEqual(after);
       expect(current).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);

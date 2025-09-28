@@ -2,6 +2,8 @@
  * Feed item type definitions for @rumenx/feed
  */
 
+import type { ChangeFrequency } from './FeedTypes';
+
 /**
  * Feed item data structure
  */
@@ -33,7 +35,7 @@ export interface FeedItemData {
   /** Priority for sitemap-style feeds (0.0 to 1.0) */
   priority?: number;
   /** Change frequency hint */
-  changefreq?: import('./FeedTypes').ChangeFrequency;
+  changefreq?: ChangeFrequency;
 }
 
 /**

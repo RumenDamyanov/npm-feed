@@ -59,7 +59,7 @@ export interface ValidationError {
   /** Human-readable error message */
   message: string;
   /** The value that failed validation */
-  value: any;
+  value: unknown;
 }
 
 /**
@@ -70,9 +70,9 @@ export type FeedFormat = 'rss' | 'atom';
 /**
  * Change frequency for feed items
  */
-export type ChangeFrequency = 
+export type ChangeFrequency =
   | 'always'
-  | 'hourly' 
+  | 'hourly'
   | 'daily'
   | 'weekly'
   | 'monthly'
