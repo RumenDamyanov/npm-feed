@@ -71,9 +71,7 @@ jobs:
       run: npm run build
 
     - name: Test package installation
-      run: |
-        cd dist
-        npm pack --dry-run --ignore-scripts
+      run: npm pack --dry-run
 
   quality:
     runs-on: ubuntu-latest
