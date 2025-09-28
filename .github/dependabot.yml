@@ -1,0 +1,66 @@
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "RumenDamyanov"
+    assignees:
+      - "RumenDamyanov"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automated"
+    versioning-strategy: increase
+    groups:
+      # Group TypeScript related dependencies
+      typescript:
+        patterns:
+          - "typescript"
+          - "@typescript-eslint/*"
+          - "@types/*"
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "jest"
+          - "@types/jest"
+          - "ts-jest"
+      # Group linting and formatting dependencies
+      code-quality:
+        patterns:
+          - "eslint*"
+          - "prettier"
+          - "eslint-*"
+      # Group build tools
+      build-tools:
+        patterns:
+          - "rimraf"
+          - "typescript"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "RumenDamyanov"
+    assignees:
+      - "RumenDamyanov"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "github-actions"
+      - "dependencies"
+      - "automated"
