@@ -344,12 +344,8 @@ const item: FeedItemData = {
   description: 'Post description',
   link: 'https://example.com/post',
   pubdate: new Date(),
-  images: [
-    /* Fully typed image objects */
-  ],
-  videos: [
-    /* Fully typed video objects */
-  ],
+  images: [/* Fully typed image objects */],
+  videos: [/* Fully typed video objects */],
 };
 ```
 
