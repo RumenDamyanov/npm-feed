@@ -71,10 +71,4 @@ export type FeedFormat = 'rss' | 'atom';
  * Change frequency for feed items
  */
 export type ChangeFrequency =
-  | 'always'
-  | 'hourly'
-  | 'daily'
-  | 'weekly'
-  | 'monthly'
-  | 'yearly'
-  | 'never';
+  'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
