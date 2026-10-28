@@ -107,6 +107,11 @@ describe('XmlHelper', () => {
         'Invalid XML tag name: 123invalid'
       );
     });
+
+    it('strips illegal characters and rejects attribute names that change the tag', () => {
+      expect(escapeXml('a\u0000b')).toBe('ab');
+      expect(() => createElement('item', 'x', { 'a"b': 'c' })).toThrow(/attribute name/);
+    });
   });
 
   describe('formatXml', () => {

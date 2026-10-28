@@ -2,20 +2,36 @@
  * Validation utility functions for feed generation
  */
 
+/// <reference types="node" />
+/* global URL */
+
 import type { ValidationError } from '../types/FeedTypes';
 import type { FeedItemData } from '../types/FeedItemTypes';
 
 /**
- * Validate URL format using a simple regex pattern
+ * Validate URL format with the URL parser.
  */
+function hasControlCharacter(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 0x1f || code === 0x7f) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export function isValidUrl(url: string): boolean {
-  if (typeof url !== 'string' || !url.trim()) {
+  if (typeof url !== 'string' || !url.trim() || hasControlCharacter(url)) {
     return false;
   }
 
-  // Simple URL validation pattern
-  const urlPattern = /^https?:\/\/[^\s/$.?#].[^\s]*$/i;
-  return urlPattern.test(url.trim());
+  try {
+    const parsed = new URL(url.trim());
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -26,13 +42,12 @@ export function isAllowedDomain(url: string, allowedDomains?: string[]): boolean
     return true;
   }
 
-  // Extract hostname from URL using regex
-  const hostnameMatch = url.match(/^https?:\/\/([^/]+)/i);
-  if (!hostnameMatch) {
+  let hostname: string;
+  try {
+    hostname = new URL(url).hostname.toLowerCase();
+  } catch {
     return false;
   }
-
-  const hostname = hostnameMatch[1]?.toLowerCase();
   if (!hostname) {
     return false;
   }

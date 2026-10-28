@@ -28,6 +28,7 @@ describe('Validator', () => {
       expect(isValidUrl('example.com')).toBe(false);
       expect(isValidUrl('')).toBe(false);
       expect(isValidUrl('   ')).toBe(false);
+      expect(isValidUrl('https://example.com/\u0000hidden')).toBe(false);
     });
 
     it('should handle non-string inputs', () => {
@@ -60,6 +61,11 @@ describe('Validator', () => {
 
     it('should handle malformed URLs', () => {
       expect(isAllowedDomain('not-a-url', ['example.com'])).toBe(false);
+    });
+
+    it('uses the URL hostname rather than the text before an at sign', () => {
+      expect(isAllowedDomain('https://evil.com@example.com', ['example.com'])).toBe(true);
+      expect(isAllowedDomain('https://example.com.evil.com', ['example.com'])).toBe(false);
     });
   });
 

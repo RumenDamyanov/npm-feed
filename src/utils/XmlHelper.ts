@@ -2,15 +2,31 @@
  * XML utility functions for feed generation
  */
 
+const xmlName = /^[A-Za-z_][A-Za-z0-9:._-]*$/;
+
+/**
+ * Remove characters that XML 1.0 forbids in text. Tab, line feed, and carriage return stay.
+ */
+export function stripIllegalXmlChars(text: string): string {
+  let result = '';
+  for (let index = 0; index < text.length; index += 1) {
+    const code = text.charCodeAt(index);
+    const illegal =
+      code <= 0x08 || code === 0x0b || code === 0x0c || (code >= 0x0e && code <= 0x1f);
+    if (!illegal) {
+      result += text.charAt(index);
+    }
+  }
+  return result;
+}
+
 /**
  * Escape XML special characters
  */
 export function escapeXml(text: string): string {
-  if (typeof text !== 'string') {
-    return String(text);
-  }
+  const value = typeof text === 'string' ? text : String(text);
 
-  return text
+  return stripIllegalXmlChars(value)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -123,7 +139,12 @@ export function createElement(
   }
 
   const attrs = Object.entries(attributes)
-    .map(([key, value]) => `${key}="${escapeXml(value)}"`)
+    .map(([key, value]) => {
+      if (!xmlName.test(key)) {
+        throw new Error(`Invalid XML attribute name: ${key}`);
+      }
+      return `${key}="${escapeXml(value)}"`;
+    })
     .join(' ');
 
   const attrString = attrs ? ` ${attrs}` : '';

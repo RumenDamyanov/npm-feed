@@ -1,6 +1,6 @@
 {
   "name": "@rumenx/feed",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A comprehensive TypeScript package for generating RSS and Atom feeds in Node.js applications with full caching support and customizable views",
   "keywords": [
     "rss",
@@ -88,7 +88,7 @@
     "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^22.23.4 || ^24.22.1 || ^26.12.1"
   },
   "publishConfig": {
     "access": "public",
