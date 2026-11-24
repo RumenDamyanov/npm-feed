@@ -14,11 +14,11 @@ const __dirname = path.dirname(__filename);
 
 function processDirectory(dir) {
   const files = fs.readdirSync(dir);
-  
+
   for (const file of files) {
     const fullPath = path.join(dir, file);
     const stat = fs.statSync(fullPath);
-    
+
     if (stat.isDirectory()) {
       processDirectory(fullPath);
     } else if (file.endsWith('.js')) {
@@ -29,47 +29,38 @@ function processDirectory(dir) {
 
 function processFile(filePath) {
   let content = fs.readFileSync(filePath, 'utf8');
-  
+
   // Fix relative imports without extensions
   const originalContent = content;
-  
+
   // Fix CommonJS require() statements
-  content = content.replace(
-    /require\(["'](\.\.?\/[^"']+?)["']\)/g,
-    (match, importPath) => {
-      if (!importPath.endsWith('.js')) {
-        return `require("${importPath}.js")`;
-      }
-      return match;
+  content = content.replace(/require\(["'](\.\.?\/[^"']+?)["']\)/g, (match, importPath) => {
+    if (!importPath.endsWith('.js')) {
+      return `require("${importPath}.js")`;
     }
-  );
-  
+    return match;
+  });
+
   // Fix ESM import statements
-  content = content.replace(
-    /from\s+["'](\.\.?\/[^"']+?)["']/g,
-    (match, importPath) => {
-      if (!importPath.endsWith('.js')) {
-        return `from "${importPath}.js"`;
-      }
-      return match;
+  content = content.replace(/from\s+["'](\.\.?\/[^"']+?)["']/g, (match, importPath) => {
+    if (!importPath.endsWith('.js')) {
+      return `from "${importPath}.js"`;
     }
-  );
-  
+    return match;
+  });
+
   // Fix dynamic import() statements
-  content = content.replace(
-    /import\(["'](\.\.?\/[^"']+?)["']\)/g,
-    (match, importPath) => {
-      if (!importPath.endsWith('.js')) {
-        return `import("${importPath}.js")`;
-      }
-      return match;
+  content = content.replace(/import\(["'](\.\.?\/[^"']+?)["']\)/g, (match, importPath) => {
+    if (!importPath.endsWith('.js')) {
+      return `import("${importPath}.js")`;
     }
-  );
-  
+    return match;
+  });
+
   if (content !== originalContent) {
     console.log(`Fixed imports in: ${filePath}`);
   }
-  
+
   fs.writeFileSync(filePath, content);
 }
 
@@ -90,4 +81,18 @@ if (fs.existsSync(esmDir)) {
   console.log('ESM extensions fixed.');
 } else {
   console.log('ESM dist directory not found, skipping...');
+}
+
+if (fs.existsSync(esmDir)) {
+  fs.writeFileSync(
+    path.join(esmDir, 'package.json'),
+    `${JSON.stringify({ type: 'module' }, null, 2)}\n`
+  );
+}
+
+if (fs.existsSync(cjsDir)) {
+  fs.writeFileSync(
+    path.join(cjsDir, 'package.json'),
+    `${JSON.stringify({ type: 'commonjs' }, null, 2)}\n`
+  );
 }
